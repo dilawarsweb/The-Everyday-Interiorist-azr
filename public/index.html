@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>theeverydayinteriorist · home interiors</title>
+  <!-- Google Fonts & Font Awesome (no other external deps) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ---------- CSS VARIABLES (soft structure / bold palette) ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #F2EFEA;
+      --charcoal: #2B2B2B;
+      --clay: #B78E74;
+      --glass-bg: rgba(242, 239, 234, 0.6);
+      --glass-border: rgba(183, 142, 116, 0.2);
+      --shadow-sm: 0 8px 20px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.05);
+      --shadow-md: 0 15px 30px -12px rgba(43,43,43,0.15);
+      --transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+      --gradient-glow: linear-gradient(145deg, #fff6ef, var(--cream));
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .logo, .playfair {
+      font-family: 'Playfair Display', serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    /* ---------- utility / glass / animations ---------- */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 2rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(183,142,116,0.4);
+      transform: translateY(-3px);
+    }
+
+    /* floating continuous animation */
+    .float {
+      animation: floatSoft 6s ease-in-out infinite;
+    }
+    @keyframes floatSoft {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(0.5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    /* fadeInLeft / fadeInRight */
+    .fade-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .fade-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .fade-left.appear, .fade-right.appear {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* scroll reveal (generic) */
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: all 0.9s ease;
+    }
+    .reveal.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* rotate image on hover */
+    .rotate-img {
+      overflow: hidden;
+      border-radius: 2rem;
+    }
+    .rotate-img img {
+      transition: transform 1.2s ease;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .rotate-img:hover img {
+      transform: rotate(2deg) scale(1.05);
+    }
+
+    /* button shine */
+    .btn-shine {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--clay);
+      color: white;
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 2.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-shine::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient( to right, rgba(255,255,255,0) 10%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 90% );
+      transform: rotate(25deg);
+      transition: left 0.7s;
+    }
+    .btn-shine:hover::after {
+      left: 100%;
+    }
+    .btn-shine:hover {
+      background-color: #a57a62;
+    }
+
+    /* link hover underline */
+    .nav-link {
+      position: relative;
+      text-decoration: none;
+      color: var(--charcoal);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--clay);
+      transition: width 0.3s;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* ---------- layout / header sticky ---------- */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      transition: background 0.3s, backdrop-filter 0.3s;
+    }
+    header.scrolled {
+      background: rgba(242,239,234,0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+    }
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+    .logo span {
+      color: var(--clay);
+    }
+    .nav-menu {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .action-icons {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 1.3rem;
+      color: var(--charcoal);
+    }
+    .mobile-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    /* mobile slide-in nav */
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 260px;
+      height: 100vh;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      padding: 6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      transition: right 0.4s ease;
+      z-index: 99;
+      border-left: 1px solid var(--glass-border);
+    }
+    .mobile-nav.open {
+      right: 0;
+    }
+    .mobile-nav a {
+      color: var(--charcoal);
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+
+    /* main */
+    main { margin-top: 80px; }
+
+    /* sections spacing */
+    section { padding: 5rem 5%; }
+
+    /* grid / card */
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 2rem;
+    }
+    .grid-2 { grid-template-columns: repeat(2,1fr); }
+    .grid-3 { grid-template-columns: repeat(3,1fr); }
+    .grid-4 { grid-template-columns: repeat(4,1fr); }
+
+    .hero-asymmetric {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .stat-item h3 { font-size: 2.5rem; color: var(--clay); }
+
+    /* card design */
+    .service-card, .blog-card, .testimonial-card {
+      background: white;
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .service-card:hover, .blog-card:hover, .testimonial-card:hover {
+      transform: scale(1.01) translateY(-8px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* contact form */
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(183,142,116,0.3);
+      border-radius: 2rem;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(4px);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* footer */
+    .footer {
+      background: var(--charcoal);
+      color: var(--cream);
+      border-radius: 3rem 3rem 0 0;
+    }
+    .footer a { color: #c9b6a8; text-decoration: none; }
+
+    /* responsiveness */
+    @media (max-width: 900px) {
+      .grid-3, .grid-4 { grid-template-columns: repeat(2,1fr); }
+      .hero-asymmetric { grid-template-columns: 1fr; }
+      .nav-menu, .action-icons { display: none; }
+      .mobile-toggle { display: block; }
+    }
+    @media (max-width: 600px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- fixed header -->
+  <header id="stickyHeader">
+    <div class="logo">theeveryday<span>interiorist</span></div>
+    <div class="nav-menu">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#blog" class="nav-link">Journal</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+    <div class="action-icons">
+      <!-- <i class="fa-regular fa-user"></i>
+      <i class="fa-regular fa-bookmark"></i>
+      <i class="fa-regular fa-heart"></i> -->
+    </div>
+    <div class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></div>
+  </header>
+
+  <!-- mobile slide-in navigation -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#home" class="nav-link">Home</a>
+    <a href="#about" class="nav-link">About</a>
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#blog" class="nav-link">Journal</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
+
+  <main>
+    <!-- HERO section asymmetric + floating elements -->
+    <section id="home" style="padding-top: 2rem;">
+      <div class="hero-asymmetric">
+        <div class="fade-left">
+          <h1 style="font-size: clamp(2.8rem,7vw,4.8rem); line-height: 1.1;">Sculpted living,<br><span style="color: var(--clay);">everyday poetry</span></h1>
+          <p style="font-size: 1.2rem; margin: 1.5rem 0 2rem; max-width: 500px;">Contemporary craft meets soft structure — we turn houses into narratives.</p>
+          <button class="btn-shine" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Begin your story</button>
+          <div style="display: flex; gap: 2rem; margin-top: 3rem;">
+            <div><i class="fa-regular fa-compass" style="color: var(--clay);"></i> <strong>360° design</strong></div>
+            <div><i class="fa-regular fa-gem" style="color: var(--clay);"></i> <strong>bespoke</strong></div>
+          </div>
+        </div>
+        <div class="fade-right float" style="position: relative;">
+          <div class="rotate-img glass-card" style="padding: 1rem;">
+            <img src="assets/img/bedroom.jpg" alt="interior mood" style="border-radius: 1.5rem;">
+          </div>
+          <!-- floating decor element (glass morphism) -->
+          <div class="glass-card" style="position: absolute; bottom:-15px; left:-30px; padding: 1.2rem 1.8rem; backdrop-filter:blur(12px);">
+            <i class="fa-regular fa-star" style="color: var(--clay);"></i> curated since 2012
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT section with stats -->
+    <section id="about">
+      <div class="grid-2" style="align-items: center;">
+        <div class="reveal rotate-img">
+          <img src="assets/img/bedroom-3.jpg" alt="about studio" style="border-radius: 2.5rem; width:100%;">
+        </div>
+        <div class="reveal">
+          <h2 style="font-size: 2.8rem;">Where architecture <br>feels like <span style="color: var(--clay);">home</span></h2>
+          <p style="margin: 1.2rem 0;">We believe every corner should tell your story. With a soft contemporary approach, we blend bold clay accents with raw textures. No trends, only timeless craft.</p>
+          <div class="grid-2" style="margin: 2.5rem 0;">
+            <div class="stat-item"><h3>15+</h3><p>years curating</p></div>
+            <div class="stat-item"><h3>320</h3><p>interiors</p></div>
+            <div class="stat-item"><h3>24</h3><p>design awards</p></div>
+            <div class="stat-item"><h3>100%</h3><p>bespoke</p></div>
+          </div>
+          <button class="btn-shine" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Explore philosophy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES cards with icons -->
+    <section id="services">
+      <h2 class="reveal" style="font-size: 2.8rem; text-align: center;">Services <span style="color: var(--clay);">· atelier</span></h2>
+      <div class="grid-3" style="margin-top: 3rem;">
+        <div class="service-card reveal glass-card">
+          <i class="fa-regular fa-pen-to-square" style="font-size: 2.5rem; color: var(--clay);"></i>
+          <h3 style="margin: 1rem 0;">Full-home curation</h3>
+          <p>From concept to最后一颗钉子, we design every detail. Starting at $12k</p>
+          <a href="#contact" class="nav-link" style="display: inline-block; margin-top:1.5rem;">Learn More →</a>
+        </div>
+        <div class="service-card reveal glass-card">
+          <i class="fa-regular fa-object-ungroup" style="font-size: 2.5rem; color: var(--clay);"></i>
+          <h3 style="margin: 1rem 0;">Furniture & objects</h3>
+          <p>Bespoke clay系列, timber & textile pieces. $3k – $18k</p>
+          <a href="#contact" class="nav-link" style="display: inline-block; margin-top:1.5rem;">Learn More →</a>
+        </div>
+        <div class="service-card reveal glass-card">
+          <i class="fa-regular fa-lightbulb" style="font-size: 2.5rem; color: var(--clay);"></i>
+          <h3 style="margin: 1rem 0;">Lighting & atmosphere</h3>
+          <p>Sculptural lighting, layered schemes. from $4.5k</p>
+          <a href="#contact" class="nav-link" style="display: inline-block; margin-top:1.5rem;">Learn More →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOG section with categories & meta -->
+    <section id="blog">
+      <div style="display: flex; justify-content: space-between; align-items: center;" class="reveal">
+        <h2 style="font-size: 2.8rem;">Journal<span style="color: var(--clay);"> / stories</span></h2>
+        <div style="display: flex; gap: 1rem;">
+          <span class="glass-card" style="padding:0.5rem 1.5rem;">all</span>
+          <span class="glass-card" style="padding:0.5rem 1.5rem;">materials</span>
+          <span class="glass-card" style="padding:0.5rem 1.5rem;">spaces</span>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 2.5rem;">
+        <div class="blog-card reveal">
+          <div class="rotate-img" style="border-radius:1.5rem; height:200px; background:#e2dcd5;"><img src="assets/img/bathroom-decor.jpg" style="object-fit: cover; height:100%;"></div>
+          <div style="margin-top:1rem;"><span style="background:var(--clay); color:white; padding:0.2rem 1rem; border-radius:40px;">material</span></div>
+          <h3>Clay narratives: 5 tactile finishes</h3>
+          <p style="color:#5f5f5f;">12 min · by rik</p>
+          <a href="#blog" class="nav-link">read more →</a>
+        </div>
+        <div class="blog-card reveal">
+          <div class="rotate-img" style="border-radius:1.5rem; height:200px; background:#e2dcd5;"><img src="assets/img/chair-table.jpeg" style="object-fit: cover; height:100%;"></div>
+          <div><span style="background:var(--clay); color:white; padding:0.2rem 1rem; border-radius:40px;">lighting</span></div>
+          <h3>Layering light like a pro</h3>
+          <p style="color:#5f5f5f;">8 min · by jordan</p>
+          <a href="#blog" class="nav-link">read more →</a>
+        </div>
+        <div class="blog-card reveal">
+          <div class="rotate-img" style="border-radius:1.5rem; height:200px; background:#e2dcd5;"><img src="assets/img/bedroom-side-light.jpg" style="object-fit: cover; height:100%;"></div>
+          <div><span style="background:var(--clay); color:white; padding:0.2rem 1rem; border-radius:40px;">craft</span></div>
+          <h3>Why asymmetry feels like home</h3>
+          <p style="color:#5f5f5f;">6 min · by casey</p>
+          <a href="#blog" class="nav-link">read more →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS / community -->
+    <section style="background: rgba(183,142,116,0.05); border-radius: 3rem;">
+      <h2 class="reveal" style="font-size: 2.8rem; text-align: center;">From the <span style="color: var(--clay);">community</span></h2>
+      <div class="grid-3" style="margin-top: 3rem;">
+        <div class="testimonial-card reveal">
+          <i class="fa-solid fa-quote-right" style="color: var(--clay); opacity: 0.4; font-size: 2rem;"></i>
+          <p style="margin: 1rem 0;">“They made our apartment feel like a gallery – every corner has a purpose.”</p>
+          <p><strong>— M. Chen</strong>, brooklyn</p>
+        </div>
+        <div class="testimonial-card reveal">
+          <i class="fa-solid fa-quote-right" style="color: var(--clay); opacity: 0.4; font-size: 2rem;"></i>
+          <p style="margin: 1rem 0;">“The clay accent wall + custom shelving is everything. Professional, warm.”</p>
+          <p><strong>— A. Velez</strong>, austin</p>
+        </div>
+        <div class="testimonial-card reveal">
+          <i class="fa-solid fa-quote-right" style="color: var(--clay); opacity: 0.4; font-size: 2rem;"></i>
+          <p style="margin: 1rem 0;">“We still get compliments on the floating credenza. timeless.”</p>
+          <p><strong>— J. Rivera</strong>, portland</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT + business info + newsletter -->
+    <section id="contact">
+      <div class="grid-2" style="gap: 3rem;">
+        <div class="reveal">
+          <h2 style="font-size: 2.8rem;">Let's create<br>something <span style="color: var(--clay);">beautiful</span></h2>
+          <p style="margin: 1.2rem 0;">Visit our studio or drop us a line. We reply within 24h.</p>
+          <div style="margin: 2rem 0;"><i class="fa-regular fa-envelope" style="color: var(--clay);"></i> hello@everydayinteriorist.site</div>
+          <div><i class="fa-regular fa-phone"></i> +1 (212) 555 0992</div>
+          <div><i class="fa-regular fa-building"></i> 42 Crosby St, New York</div>
+          <!-- newsletter glass block -->
+          <div class="glass-card" style="margin-top: 2rem; padding: 2rem;">
+            <h4>Subscribe to notes</h4>
+            <div style="display: flex; gap:0.5rem; margin-top:1rem;">
+              <input type="email" placeholder="your.email@domain.com" id="newsletterEmail" style="flex:1; border-radius: 3rem; border: none; padding: 1rem; background: white;">
+              <button class="btn-shine" id="newsletterBtn">Join</button>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <form id="contactForm" class="contact-form glass-card" style="padding: 2.5rem;" onsubmit="return handleContactSubmit(event)">
+            <h3>Send inquiry</h3>
+            <input type="text" placeholder="your name" id="name" required>
+            <input type="email" placeholder="email" id="email" required>
+            <textarea rows="3" placeholder="tell us about your space" id="message" required></textarea>
+            <button type="submit" class="btn-shine" style="width:100%;">Send message →</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER multiple columns -->
+    <footer class="footer">
+      <div class="grid-4" style="padding: 4rem 5%; color: #ddd;">
+        <div>
+          <h4 style="color: var(--clay);">theeverydayinteriorist</h4>
+          <p style="margin-top:1rem;">Contemporary craft, soft asymmetry, bold clay. Since 2012.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <p><a href="#home" class="nav-link" style="color:#ddd;">Home</a></p>
+          <p><a href="#about" class="nav-link" style="color:#ddd;">About</a></p>
+          <p><a href="#services" class="nav-link" style="color:#ddd;">Services</a></p>
+        </div>
+        <div>
+          <h4>Studio</h4>
+          <p><a href="#contact" class="nav-link" style="color:#ddd;">Contact</a></p>
+          <p><a href="#blog" class="nav-link" style="color:#ddd;">Journal</a></p>
+          <p><a href="#contact" class="nav-link" style="color:#ddd;">Careers</a></p>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <p><a href="privacy-policy.html" class="nav-link" style="color:#ddd;">Privacy</a></p>
+          <p><a href="terms-and-conditions.html" class="nav-link" style="color:#ddd;">Terms</a></p>
+          <p><a href="#contact" class="nav-link" style="color:#ddd;">Accessibility</a></p>
+        </div>
+      </div>
+      <div style="text-align: center; padding: 2rem; border-top: 1px solid #3f3f3f;">© everyday interiorist – all rights reserved</div>
+    </footer>
+  </main>
+
+  <!-- embedded javascript (no external) -->
+  <script>
+    (function() {
+      // sticky header
+      const header = document.getElementById('stickyHeader');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      });
+
+      // mobile toggle
+      const toggle = document.getElementById('mobileToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      toggle.addEventListener('click', () => {
+        mobileNav.classList.toggle('open');
+      });
+      // close if a link is clicked (optional)
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          mobileNav.classList.remove('open');
+          const target = link.getAttribute('href');
+          if (target && target.startsWith('#')) {
+            e.preventDefault();
+            const el = document.querySelector(target);
+            if (el) el.scrollIntoView({behavior: 'smooth'});
+          }
+        });
+      });
+
+      // scroll reveal (Intersection Observer)
+      const revealElements = document.querySelectorAll('.reveal, .fade-left, .fade-right');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('appear');
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+      revealElements.forEach(el => observer.observe(el));
+
+      // smooth scroll for all anchor links (prevent dead hrefs)
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // contact form validation & alert
+      window.handleContactSubmit = function(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const msg = document.getElementById('message').value.trim();
+        if (!name || !email || !msg) {
+          alert('please fill all fields');
+          return false;
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+          alert('enter a valid email');
+          return false;
+        }
+        alert(`✨ Thanks ${name}, we received your message (demo).`);
+        document.getElementById('contactForm').reset();
+        return false;
+      };
+
+      // newsletter button
+      document.getElementById('newsletterBtn').addEventListener('click', function() {
+        const emailInput = document.getElementById('newsletterEmail');
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+          alert('please enter a valid email for newsletter');
+        } else {
+          alert(`👍 Subscribed (demo): ${email}`);
+          emailInput.value = '';
+        }
+      });
+
+      // navigation active / dead prevention — all hrefs are either #section or fallback.
+      // fix any potential missing: add click handlers to .nav-link (already done via global)
+    })();
+  </script>
+  <!-- ensure images have alt text (AdSense friendly) -->
+</body>
+</html>
